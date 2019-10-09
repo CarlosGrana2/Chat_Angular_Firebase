@@ -13,14 +13,28 @@ import { auth } from 'firebase/app';
 export class ChatService {
   private itemsCollection: AngularFirestoreCollection<Mensaje>;
   public chats: Mensaje[] = [];
+  public usuario: any = {};
 
-  constructor(private afs: AngularFirestore, public afAuth: AngularFireAuth) { }
+  constructor(private afs: AngularFirestore, public afAuth: AngularFireAuth) { 
+    this.afAuth.authState.subscribe( user=> {
+      console.log('Estado del usuario', user);
+
+      if (!user) {
+        return;
+      }
+
+      this.usuario.nombre = user.displayName;
+      this.usuario.UID = user.uid;
+
+    } );
+  }
 
   login( proveedor: string ) {
     this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
   }
 
   logout() {
+    this.usuario = {};
     this.afAuth.auth.signOut();
   }
 
