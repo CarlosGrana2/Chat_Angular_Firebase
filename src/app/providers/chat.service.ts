@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { Mensaje } from "../interface/mensaje.interface";
+import { Mensaje } from '../interface/mensaje.interface';
 import { map } from 'rxjs/operators';
 
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -15,8 +15,8 @@ export class ChatService {
   public chats: Mensaje[] = [];
   public usuario: any = {};
 
-  constructor(private afs: AngularFirestore, public afAuth: AngularFireAuth) { 
-    this.afAuth.authState.subscribe( user=> {
+  constructor(private afs: AngularFirestore, public afAuth: AngularFireAuth) {
+    this.afAuth.authState.subscribe( user => {
       console.log('Estado del usuario', user);
 
       if (!user) {
@@ -24,13 +24,19 @@ export class ChatService {
       }
 
       this.usuario.nombre = user.displayName;
-      this.usuario.UID = user.uid;
+      this.usuario.uid = user.uid;
 
     } );
   }
 
   login( proveedor: string ) {
-    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
+
+    if (proveedor === 'google') {
+      this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
+    } else {
+      this.afAuth.auth.signInWithPopup( new auth.TwitterAuthProvider() );
+    }
+
   }
 
   logout() {
@@ -46,24 +52,25 @@ export class ChatService {
           console.log(mensajes);
           this.chats = [];
 
-          for (let mensaje of mensajes) {
+          for (const mensaje of mensajes) {
             this.chats.unshift(mensaje);
           }
 
           return this.chats;
 
         })
-      )
+      );
   }
 
   agregarMensaje(texto: string) {
 
-    // TODO falta el UID del usuario.  
-    let mensaje: Mensaje = {
-      nombre: 'Demo',
+    // TODO falta el UID del usuario.
+    const mensaje: Mensaje = {
+      nombre: this.usuario.nombre,
       mensaje: texto,
-      fecha: new Date().getTime()
-    }
+      fecha: new Date().getTime(),
+      uid: this.usuario.uid
+    };
 
     return this.itemsCollection.add(mensaje);
   }

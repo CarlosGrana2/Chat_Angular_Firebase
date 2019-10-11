@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ChatService } from "../../providers/chat.service";
+import { ChatService } from '../../providers/chat.service';
 
 @Component({
   selector: 'app-chat',
@@ -8,9 +8,10 @@ import { ChatService } from "../../providers/chat.service";
 })
 export class ChatComponent implements OnInit {
 
-  mensaje: string = '';
+  mensaje = '';
   elemento: any;
 
+  // tslint:disable-next-line:variable-name
   constructor(public _cs: ChatService) {
     this._cs.cargarmensajes().subscribe(() => {
 
@@ -36,8 +37,8 @@ export class ChatComponent implements OnInit {
     }
 
     this._cs.agregarMensaje(this.mensaje)
-      .then(() => { this.mensaje = '' })
-      .catch((err) => { console.error('Error al enviar mensaje', err) });
+      .then(() => { this.mensaje = ''; })
+      .catch((err) => { console.error('Error al enviar mensaje', err); });
   }
 
 }

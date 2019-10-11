@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { ChatService } from "./providers/chat.service";
+import { ChatService } from './providers/chat.service';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +9,7 @@ import { ChatService } from "./providers/chat.service";
 })
 export class AppComponent {
 
-  constructor( public _cs:ChatService) {
-   
+  constructor( public cs: ChatService) {
+    console.log( cs.usuario.nombre);
   }
 }
